@@ -16,6 +16,17 @@ Each sketch is defined by a configuration map, and composed of several functions
 
 See specs.clj
 
+## Running a sketch
+
+See bvm.sketches.minimal.
+
+```clojure
+; bvm.sketches.minimal has its own -main function so it can be called directly
+; Running through Lein is required to use the dependencies defined in project.clj 
+lein run -m bvm.sketches.minimal
+```
+
+
 ## Intended output
 
 The current intended output is PDF. The code can be modified to run in the browser but it's not currently set up that way.

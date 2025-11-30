@@ -1,5 +1,6 @@
 (ns bvm.sketches.minimal
   (:require
+   [bvm.core :as bvm]
    [bvm.layouts.static-test :refer [static-test] :rename {static-test static-layout}]
    [bvm.styles.static-test :refer [static-test] :rename {static-test static-style}]
    [bvm.drawing.circle :refer [circle]]))
@@ -13,3 +14,7 @@
    :layout-fn static-layout
    :style-fn static-style
    :draw-fn circle})
+
+(defn -main [& args]
+  (bvm/vera config))
+
