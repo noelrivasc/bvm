@@ -44,7 +44,7 @@
         draw-fn (:draw-fn conf)
         width (get-in conf [:canvas :canvas-width])
         height (get-in conf [:canvas :canvas-height])
-        filename (:filename conf)]
+        filename (str "out/" (:filename conf))]
     (prn (str "Width: " width " height: " height " filename: " filename))
     (q/sketch
      :draw (fn []
