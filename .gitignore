@@ -1,0 +1,8 @@
+.DS_Store
+.calva
+.clj-kondo
+.lsp
+.lein-repl-history
+.rebel_readline_history
+*.pdf
+target/
