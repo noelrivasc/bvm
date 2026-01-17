@@ -47,7 +47,7 @@
 (s/def ::drawing-height int?)
 
 (s/def ::drawing-geometry
-  (s/keys :req-un [::drawing-x ::drawing-y ::drawing-rotation ::drawing-width ::drawing-height]))
+  (s/keys :req-un [::drawing-x ::drawing-y ::drawing-rotation ::drawing-width ::drawing-height ::index]))
 
 ; **************************************
 ; SKETCH CONFIGURATION OBJECT
@@ -70,10 +70,35 @@
 (s/def ::layout-fn ifn?)
 (s/def ::style-fn ifn?)
 
+; Options maps for layout, style, and drawing functions
+; These are open-ended maps that allow passing configuration to the functions
+(s/def ::layout-options map?)
+(s/def ::style-options map?)
+(s/def ::drawing-options map?)
+
 (s/def ::sketch-config
   (s/and
    (s/keys :req-un [::renderer ::canvas ::num-steps ::layout-fn ::style-fn ::draw-fn]
-           :opt-un [::style-config])
+           :opt-un [::style-config ::layout-options ::style-options ::drawing-options])
+   (fn [conf]
+     (or (not= (:renderer conf) :pdf)
+         (contains? conf :filename)))))
+
+; **************************************
+; LAYER CONFIGURATION (for multi-layer sketches)
+; **************************************
+; A layer config is like a sketch config but without renderer/canvas/filename
+; since those are shared across all layers
+(s/def ::layer-config
+  (s/keys :req-un [::num-steps ::layout-fn ::style-fn ::draw-fn]
+          :opt-un [::style-config ::layout-options ::style-options ::drawing-options]))
+
+(s/def ::layers (s/coll-of ::layer-config :min-count 1))
+
+(s/def ::multi-sketch-config
+  (s/and
+   (s/keys :req-un [::renderer ::canvas ::layers]
+           :opt-un [])
    (fn [conf]
      (or (not= (:renderer conf) :pdf)
          (contains? conf :filename)))))
@@ -82,19 +107,22 @@
 ; FUNCTION SPECS
 ; **************************************
 ; Layout function
+; Takes index, num-steps, and an optional options map
 (s/def ::index (s/or :positive-integer pos-int? :zero #(= % 0)))
 (s/def ::layout-fn-spec
-  (s/fspec :args (s/cat :index ::index :num-steps ::num-steps)
+  (s/fspec :args (s/cat :index ::index :num-steps ::num-steps :options (s/? ::layout-options))
            :ret ::transform-map))
 
 ; Style function
+; Takes style-config, transform-map, and an optional options map
 (s/def ::style-fn-spec
-  (s/fspec :args (s/cat :transform-map ::transform-map :style-config ::style-config)
+  (s/fspec :args (s/cat :style-config ::style-config :transform-map ::transform-map :options (s/? ::style-options))
            :ret ::style-map))
 
 ; Drawing function
+; Takes drawing-geometry, style-map, and an optional options map
 (s/def ::draw-fn-spec
-  (s/fspec :args (s/cat :drawing-geometry ::drawing-geometry :style-map ::style-map)
+  (s/fspec :args (s/cat :drawing-geometry ::drawing-geometry :style-map ::style-map :options (s/? ::drawing-options))
            :ret nil?))
 
 
