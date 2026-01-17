@@ -1,6 +1,6 @@
 (ns bvm.layouts.static-test)
 
-(defn static-test [index num-steps]
+(defn static-test [index num-steps _options]
   {:index index
    :x 0.5
    :y 0.5
