@@ -388,7 +388,7 @@
 
 (def config
   {:renderer :pdf
-   :filename "abstract-layers.pdf"
+   :filename "abstract-layers"
    :canvas {:canvas-width 1200
             :canvas-height 800}
    :layers [layer-1

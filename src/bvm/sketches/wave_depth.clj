@@ -81,7 +81,7 @@
 
 (def config
   {:renderer :pdf
-   :filename "wave-depth.pdf"
+   :filename "wave-depth"
    :canvas {:canvas-width 1200
             :canvas-height 800}
    :layers layers})

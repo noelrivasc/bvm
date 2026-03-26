@@ -7,7 +7,7 @@
 
 (def config
   {:renderer :pdf
-   :filename "spiral-demo.pdf"
+   :filename "spiral-demo"
    :canvas {:canvas-width 600
             :canvas-height 600}
    :num-steps 50

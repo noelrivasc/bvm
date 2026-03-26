@@ -7,7 +7,7 @@
 
 (def config
   {:renderer :pdf
-   :filename "grid-demo.pdf"
+   :filename "grid-demo"
    :canvas {:canvas-width 600
             :canvas-height 600}
    :num-steps 12

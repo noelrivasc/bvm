@@ -55,20 +55,24 @@
 
   (let [instructions (generate-instructions conf)
         draw-fn (:draw-fn conf)
+        renderer (:renderer conf)
         width (get-in conf [:canvas :canvas-width])
         height (get-in conf [:canvas :canvas-height])
-        filename (str "out/" (:filename conf))]
+        ext (case renderer :pdf ".pdf" :java2d ".png")
+        filename (str "out/" (:filename conf) ext)]
     (prn (str "Width: " width " height: " height " filename: " filename))
     (q/sketch
+     :size [width height]
      :draw (fn []
              (try
-               (q/do-record (q/create-graphics
-                             width
-                             height
-                             :pdf filename)
-                            (run! #(apply draw-fn %) instructions)
-                            (q/exit))
-
+               (case renderer
+                 :pdf (q/do-record (q/create-graphics width height :pdf filename)
+                                   (run! #(apply draw-fn %) instructions)
+                                   (q/exit))
+                 :java2d (do
+                           (run! #(apply draw-fn %) instructions)
+                           (q/save filename)
+                           (q/exit)))
                (catch Exception e (println "Something went wrong:" (.getMessage e))))))))
 
 (defn- draw-layer
@@ -87,21 +91,26 @@
 
   (let [canvas (:canvas conf)
         layers (:layers conf)
+        renderer (:renderer conf)
         width (:canvas-width canvas)
         height (:canvas-height canvas)
-        filename (str "out/" (:filename conf))]
+        ext (case renderer :pdf ".pdf" :java2d ".png")
+        filename (str "out/" (:filename conf) ext)]
     (prn (str "Width: " width " height: " height " filename: " filename))
     (prn (str "Rendering " (count layers) " layers"))
     (q/sketch
+     :size [width height]
      :draw (fn []
              (try
-               (q/do-record (q/create-graphics
-                             width
-                             height
-                             :pdf filename)
-                            (doseq [layer layers]
-                              (draw-layer layer canvas))
-                            (q/exit))
-
+               (case renderer
+                 :pdf (q/do-record (q/create-graphics width height :pdf filename)
+                                   (doseq [layer layers]
+                                     (draw-layer layer canvas))
+                                   (q/exit))
+                 :java2d (do
+                           (doseq [layer layers]
+                             (draw-layer layer canvas))
+                           (q/save filename)
+                           (q/exit)))
                (catch Exception e (println "Something went wrong:" (.getMessage e))))))))
 

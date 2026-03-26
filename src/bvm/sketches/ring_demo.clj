@@ -84,10 +84,10 @@
                      :seed 303}})
 
 (def config
-  {:renderer :pdf
-   :filename "ring-demo.pdf"
-   :canvas {:canvas-width 600
-            :canvas-height 600}
+  {:renderer :java2d
+   :filename "ring-demo"
+   :canvas {:canvas-width 6000
+            :canvas-height 6000}
    :layers [outer-ring middle-arc inner-arc]})
 
 (defn -main [& args]

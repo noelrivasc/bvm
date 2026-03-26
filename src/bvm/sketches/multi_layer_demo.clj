@@ -34,7 +34,7 @@
 
 (def config
   {:renderer :pdf
-   :filename "multi-layer-demo.pdf"
+   :filename "multi-layer-demo"
    :canvas {:canvas-width 600
             :canvas-height 600}
    :layers [grid-layer spiral-layer]})

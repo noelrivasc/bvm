@@ -7,7 +7,7 @@
 
 (def config
   {:renderer :pdf
-   :filename "minimal.pdf"
+   :filename "minimal"
    :canvas {:canvas-width 600
             :canvas-height 600}
    :num-steps 1

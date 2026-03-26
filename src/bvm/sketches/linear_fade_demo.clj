@@ -7,7 +7,7 @@
 
 (def config
   {:renderer :pdf
-   :filename "linear-fade-demo.pdf"
+   :filename "linear-fade-demo"
    :canvas {:canvas-width 600
             :canvas-height 600}
    :num-steps 40

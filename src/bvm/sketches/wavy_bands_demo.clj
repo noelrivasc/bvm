@@ -123,7 +123,7 @@
 
 (def config
   {:renderer :pdf
-   :filename "wavy-bands-demo.pdf"
+   :filename "wavy-bands-demo"
    :canvas {:canvas-width 600
             :canvas-height 600}
    :layers [band-1 band-2 band-3 band-4]})

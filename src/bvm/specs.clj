@@ -56,7 +56,7 @@
 (s/def ::style-config
   (s/keys :req-un [::style-defaults]))
 
-(s/def ::renderer #{:pdf :canvas})
+(s/def ::renderer #{:pdf :java2d})
 
 (s/def ::canvas-width int?)
 (s/def ::canvas-height int?)
@@ -77,12 +77,8 @@
 (s/def ::drawing-options map?)
 
 (s/def ::sketch-config
-  (s/and
-   (s/keys :req-un [::renderer ::canvas ::num-steps ::layout-fn ::style-fn ::draw-fn]
-           :opt-un [::style-config ::layout-options ::style-options ::drawing-options])
-   (fn [conf]
-     (or (not= (:renderer conf) :pdf)
-         (contains? conf :filename)))))
+  (s/keys :req-un [::renderer ::canvas ::filename ::num-steps ::layout-fn ::style-fn ::draw-fn]
+          :opt-un [::style-config ::layout-options ::style-options ::drawing-options]))
 
 ; **************************************
 ; LAYER CONFIGURATION (for multi-layer sketches)
@@ -96,12 +92,7 @@
 (s/def ::layers (s/coll-of ::layer-config :min-count 1))
 
 (s/def ::multi-sketch-config
-  (s/and
-   (s/keys :req-un [::renderer ::canvas ::layers]
-           :opt-un [])
-   (fn [conf]
-     (or (not= (:renderer conf) :pdf)
-         (contains? conf :filename)))))
+  (s/keys :req-un [::renderer ::canvas ::filename ::layers]))
 
 ; **************************************
 ; FUNCTION SPECS

@@ -7,7 +7,7 @@
 
 (def config
   {:renderer :pdf
-   :filename "rectangle-demo.pdf"
+   :filename "rectangle-demo"
    :canvas {:canvas-width 600
             :canvas-height 600}
    :num-steps 45
