@@ -76,23 +76,28 @@
 (s/def ::style-options map?)
 (s/def ::drawing-options map?)
 
+(s/def ::background-color ::rgb-color)
+
 (s/def ::sketch-config
   (s/keys :req-un [::renderer ::canvas ::filename ::num-steps ::layout-fn ::style-fn ::draw-fn]
-          :opt-un [::style-config ::layout-options ::style-options ::drawing-options]))
+          :opt-un [::style-config ::layout-options ::style-options ::drawing-options ::background-color]))
 
 ; **************************************
 ; LAYER CONFIGURATION (for multi-layer sketches)
 ; **************************************
 ; A layer config is like a sketch config but without renderer/canvas/filename
 ; since those are shared across all layers
+(s/def ::blend-mode #{:blend :add :subtract :darkest :lightest :difference :exclusion :multiply :screen :replace})
+
 (s/def ::layer-config
   (s/keys :req-un [::num-steps ::layout-fn ::style-fn ::draw-fn]
-          :opt-un [::style-config ::layout-options ::style-options ::drawing-options]))
+          :opt-un [::style-config ::layout-options ::style-options ::drawing-options ::blend-mode]))
 
 (s/def ::layers (s/coll-of ::layer-config :min-count 1))
 
 (s/def ::multi-sketch-config
-  (s/keys :req-un [::renderer ::canvas ::filename ::layers]))
+  (s/keys :req-un [::renderer ::canvas ::filename ::layers]
+          :opt-un [::background-color]))
 
 ; **************************************
 ; FUNCTION SPECS

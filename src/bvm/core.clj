@@ -58,6 +58,7 @@
         renderer (:renderer conf)
         width (get-in conf [:canvas :canvas-width])
         height (get-in conf [:canvas :canvas-height])
+        [bg-r bg-g bg-b] (get conf :background-color [255 255 255])
         ext (case renderer :pdf ".pdf" :java2d ".png")
         filename (str "out/" (:filename conf) ext)]
     (prn (str "Width: " width " height: " height " filename: " filename))
@@ -67,9 +68,11 @@
              (try
                (case renderer
                  :pdf (q/do-record (q/create-graphics width height :pdf filename)
+                                   (q/background bg-r bg-g bg-b)
                                    (run! #(apply draw-fn %) instructions)
                                    (q/exit))
                  :java2d (do
+                           (q/background bg-r bg-g bg-b)
                            (run! #(apply draw-fn %) instructions)
                            (q/save filename)
                            (q/exit)))
@@ -79,7 +82,9 @@
   "Generates instructions for a layer and draws them using the layer's draw-fn."
   [layer-conf canvas]
   (let [instructions (generate-instructions-for-layer layer-conf canvas)
-        draw-fn (:draw-fn layer-conf)]
+        draw-fn (:draw-fn layer-conf)
+        mode (:blend-mode layer-conf :blend)]
+    (q/blend-mode mode)
     (run! #(apply draw-fn %) instructions)))
 
 (defn vera-multi
@@ -94,6 +99,7 @@
         renderer (:renderer conf)
         width (:canvas-width canvas)
         height (:canvas-height canvas)
+        [bg-r bg-g bg-b] (get conf :background-color [255 255 255])
         ext (case renderer :pdf ".pdf" :java2d ".png")
         filename (str "out/" (:filename conf) ext)]
     (prn (str "Width: " width " height: " height " filename: " filename))
@@ -104,10 +110,12 @@
              (try
                (case renderer
                  :pdf (q/do-record (q/create-graphics width height :pdf filename)
+                                   (q/background bg-r bg-g bg-b)
                                    (doseq [layer layers]
                                      (draw-layer layer canvas))
                                    (q/exit))
                  :java2d (do
+                           (q/background bg-r bg-g bg-b)
                            (doseq [layer layers]
                              (draw-layer layer canvas))
                            (q/save filename)
