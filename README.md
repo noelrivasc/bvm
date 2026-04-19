@@ -8,7 +8,31 @@ Copyright © 2025 Noel Rivas
 
 ## Sketch structure
 
-Each sketch is defined by a configuration map, which includes references to three key functions:
+The definition of a sketch has evolved with the project. Initially, it was a drawing defined by a configuration map, which included a layout function, a style function and a drawing function. See notes about them below under _Particle drawing_.
+
+In the most recent version, I think of a sketch in the following terms:
+
+### Particles
+
+A Particle is a single object (a square, circle, line... ) that's drawn by a drawing function.
+
+Particles are essential to a sketch, but aren't produced manually; they are the outcomes of processing a Stroke (layer) configuration.
+
+### Strokes
+
+A Stroke is a collection of Particles. It's defined by the triad of layout, style and drawing function.
+
+In the configuration spec and the core functions, it's referred to as a _layer_.
+
+Strokes are essential to a sketch. Even for single-particle drawing, a stroke has to be used to generate its configuration.
+
+### Fields
+
+A Field is a collection of Strokes. The concept is derived from the wave_depth sketch, in which I used a function to produce a set of layers, which define something that looks like a color field (or plane, passage, patch, whatever you want to call an identifiable surface on a painting).
+
+Fields are not essential for a sketch; they are helpers that aid in the creation of stroke progressions.
+
+## Particle drawing
 
 ### Layout function
 
@@ -60,7 +84,7 @@ Vim-fireplace allows you to run expressions from within Vim.
 
 ## Intended output
 
-The current intended output is PDF. The code can be modified to run in the browser but it's not currently set up that way.
+The current intended output is PNG or PDF. The code can be modified to run in the browser but it's not currently set up that way.
 
 ## Running a sketch
 
