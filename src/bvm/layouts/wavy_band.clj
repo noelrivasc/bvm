@@ -12,6 +12,7 @@
                      this is the y-axis center. For vertical, the x-axis center.
     :object-width  - Required. Width of objects (fraction of canvas).
     :object-height - Required. Height of objects (fraction of canvas).
+    :offset        - Optional. Wave offset along the drawing axis (can be negative).
     :variance      - Optional. Random deviation from wave (0-1). Default: 0.0.
     :phase         - Optional. Boolean. True starts wave going down. Default: false.
     :direction     - Optional. :horizontal or :vertical. Default: :horizontal.
@@ -40,8 +41,10 @@
         ;; Apply variance as random offset scaled by amplitude
         variance-offset (* variance amplitude (- (* 2.0 (.nextDouble rng)) 1.0))
         wave-offset (+ (* amplitude sine-value) variance-offset)
-        ;; Wave is centered: spans from (0.5 - length/2) to (0.5 + length/2)
-        start-pos (- 0.5 (/ length 2.0))
+        ;; Wave starts centered: spans from (0.5 - length/2) to (0.5 + length/2)
+        ;; Its position can be moved along the drawing axis by use of :offset
+        drawing-offset (:offset options 0)
+        start-pos (+ drawing-offset (- 0.5 (/ length 2.0)))
         draw-axis-pos (+ start-pos (* progress length))
         cross-axis-pos (+ position wave-offset)
         ;; Assign x, y based on direction
@@ -49,6 +52,8 @@
                 [draw-axis-pos cross-axis-pos]
                 [cross-axis-pos draw-axis-pos])]
     {:index index
+     ; NOTE that the clamping can cause objects drawn
+     ; to agglomerate on the edges of the canvas.
      :x (float (max 0.0 (min 1.0 x)))
      :y (float (max 0.0 (min 1.0 y)))
      :width (float object-width)
