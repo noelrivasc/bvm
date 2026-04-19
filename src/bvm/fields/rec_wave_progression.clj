@@ -62,47 +62,78 @@
 (s/def ::direction #{:horizontal :vertical})
 
 ;; Layout progressions: each has -initial, -final, -ease
-(defmacro ^:private def-progression [name-sym pred]
-  (let [base (name name-sym)
-        ini (keyword (str *ns*) (str base "-initial"))
-        fin (keyword (str *ns*) (str base "-final"))
-        ease (keyword (str *ns*) (str base "-ease"))]
-    `(do
-       (s/def ~ini ~pred)
-       (s/def ~fin ~pred)
-       (s/def ~ease ::ease-fn))))
 
-(def-progression amplitude ::unit-float)
-(def-progression frequency ::non-neg-number)
-(def-progression length ::unit-float)
-(def-progression offset number?)
-(def-progression field-position ::unit-float)
-(def-progression obj-width ::unit-float)
-(def-progression obj-height ::unit-float)
-(def-progression vertex-variance ::unit-float)
-(def-progression layout-variance ::unit-float)
-(def-progression size-variance ::non-neg-number)
+(s/def ::amplitude-initial ::unit-float)
+(s/def ::amplitude-final ::unit-float)
+(s/def ::amplitude-ease ::ease-fn)
+
+(s/def ::frequency-initial ::non-neg-number)
+(s/def ::frequency-final ::non-neg-number)
+(s/def ::frequency-ease ::ease-fn)
+
+(s/def ::length-initial ::unit-float)
+(s/def ::length-final ::unit-float)
+(s/def ::length-ease ::ease-fn)
+
+(s/def ::offset-initial number?)
+(s/def ::offset-final number?)
+(s/def ::offset-ease ::ease-fn)
+
+(s/def ::field-position-initial ::unit-float)
+(s/def ::field-position-final ::unit-float)
+(s/def ::field-position-ease ::ease-fn)
+
+(s/def ::obj-width-initial ::unit-float)
+(s/def ::obj-width-final ::unit-float)
+(s/def ::obj-width-ease ::ease-fn)
+
+(s/def ::obj-height-initial ::unit-float)
+(s/def ::obj-height-final ::unit-float)
+(s/def ::obj-height-ease ::ease-fn)
+
+(s/def ::vertex-variance-initial ::unit-float)
+(s/def ::vertex-variance-final ::unit-float)
+(s/def ::vertex-variance-ease ::ease-fn)
+
+(s/def ::layout-variance-initial ::unit-float)
+(s/def ::layout-variance-final ::unit-float)
+(s/def ::layout-variance-ease ::ease-fn)
+
+(s/def ::size-variance-initial ::non-neg-number)
+(s/def ::size-variance-final ::non-neg-number)
+(s/def ::size-variance-ease ::ease-fn)
 
 ;; Style progressions: 4 corners + field-ease (within-stroke stays linear)
-(defmacro ^:private def-style-progression [name-sym pred]
-  (let [base (name name-sym)
-        is (keyword (str *ns*) (str base "-initial-start"))
-        ie (keyword (str *ns*) (str base "-initial-end"))
-        fs (keyword (str *ns*) (str base "-final-start"))
-        fe (keyword (str *ns*) (str base "-final-end"))
-        ease (keyword (str *ns*) (str base "-field-ease"))]
-    `(do
-       (s/def ~is ~pred)
-       (s/def ~ie ~pred)
-       (s/def ~fs ~pred)
-       (s/def ~fe ~pred)
-       (s/def ~ease ::ease-fn))))
 
-(def-style-progression stroke-width ::non-neg-number)
-(def-style-progression stroke-color ::lch-color)
-(def-style-progression stroke-opacity (s/int-in 0 256))
-(def-style-progression fill-color ::lch-color)
-(def-style-progression fill-opacity (s/int-in 0 256))
+(s/def ::stroke-width-initial-start ::non-neg-number)
+(s/def ::stroke-width-initial-end ::non-neg-number)
+(s/def ::stroke-width-final-start ::non-neg-number)
+(s/def ::stroke-width-final-end ::non-neg-number)
+(s/def ::stroke-width-field-ease ::ease-fn)
+
+(s/def ::stroke-color-initial-start ::lch-color)
+(s/def ::stroke-color-initial-end ::lch-color)
+(s/def ::stroke-color-final-start ::lch-color)
+(s/def ::stroke-color-final-end ::lch-color)
+(s/def ::stroke-color-field-ease ::ease-fn)
+
+(s/def ::stroke-opacity-initial-start (s/int-in 0 256))
+(s/def ::stroke-opacity-initial-end (s/int-in 0 256))
+(s/def ::stroke-opacity-final-start (s/int-in 0 256))
+(s/def ::stroke-opacity-final-end (s/int-in 0 256))
+(s/def ::stroke-opacity-field-ease ::ease-fn)
+
+(s/def ::fill-color-initial-start ::lch-color)
+(s/def ::fill-color-initial-end ::lch-color)
+(s/def ::fill-color-final-start ::lch-color)
+(s/def ::fill-color-final-end ::lch-color)
+(s/def ::fill-color-field-ease ::ease-fn)
+
+(s/def ::fill-opacity-initial-start (s/int-in 0 256))
+(s/def ::fill-opacity-initial-end (s/int-in 0 256))
+(s/def ::fill-opacity-final-start (s/int-in 0 256))
+(s/def ::fill-opacity-final-end (s/int-in 0 256))
+(s/def ::fill-opacity-field-ease ::ease-fn)
 
 (s/def ::config
   (s/keys :req-un [::num-bands ::particles-per-band-initial ::blend-mode]
