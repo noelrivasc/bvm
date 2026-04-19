@@ -64,6 +64,10 @@
     (apply q/fill (conj (:fill-color style-map) (:fill-opacity style-map)))
     ;; Draw polygon
     (q/begin-shape)
+    ; Notes for a future curve implementation:
+    ; the order shoudl be 4 (control point), 1, 2, 3, 4
+    ; (curve vertices), 1, 4 (control points)
+    ; use the curve-vertex function instead of vertex
     (doseq [[x y] final-corners]
       (q/vertex x y))
     (q/end-shape :close)))
