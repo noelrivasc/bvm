@@ -53,16 +53,17 @@
    :phase false
    :direction :horizontal
 
-   ;; 4-corner style params — vary on both axes to exercise the full grid
+   ;; 4-corner style params — vary on both axes to exercise the full grid.
+   ;; Colours are LCH [L C H]: L=[0,100], C=[0,~130], H degrees.
    :stroke-width-initial-start 1
    :stroke-width-initial-end 1
    :stroke-width-final-start 3
    :stroke-width-final-end 0
 
-   :stroke-color-initial-start [40 40 60]
-   :stroke-color-initial-end [20 60 120]
-   :stroke-color-final-start [120 30 30]
-   :stroke-color-final-end [60 20 90]
+   :stroke-color-initial-start [25 30 280]   ; dark indigo
+   :stroke-color-initial-end [25 45 240]     ; dark blue
+   :stroke-color-final-start [30 60 20]      ; dark red
+   :stroke-color-final-end [20 40 310]       ; dark magenta
    :stroke-color-field-ease ease-in-out
 
    :stroke-opacity-initial-start 180
@@ -70,15 +71,17 @@
    :stroke-opacity-final-start 60
    :stroke-opacity-final-end 180
 
-   :fill-color-initial-start [230 220 200]
-   :fill-color-initial-end [200 210 230]
-   :fill-color-final-start [180 100 120]
-   :fill-color-final-end [100 140 190]
+   :fill-color-initial-start [90 15 85]      ; cream
+   :fill-color-initial-end [85 15 240]       ; pale blue
+   :fill-color-final-start [55 55 10]        ; warm red
+   :fill-color-final-end [60 40 260]         ; dusty blue
 
    :fill-opacity-initial-start 220
    :fill-opacity-initial-end 20
    :fill-opacity-final-start 180
    :fill-opacity-final-end 10
+
+   :color-space :srgb
 
    :seed-base-layout 100
    :seed-step-layout 17

@@ -4,11 +4,17 @@
 
    Two axes of progression:
      - initial / final : across the field axis (first band -> last band).
-     - start / end     : within a stroke (consumed by linear-fade).
+     - start / end     : within a stroke (consumed by lch-fade).
+
+   Colour params are LCH tuples [L C H] (L in [0,100], C in [0,~130],
+   H in degrees). Interpolation happens in LCH on both axes; conversion
+   to RGB bytes happens inside the style fn at the very last step. The
+   target gamut for that conversion is controlled by :color-space
+   (:srgb, default; or :adobe-rgb).
 
    Every progression accepts an `-ease` fn with signature (t -> t), both in
    [0, 1]. Easing is applied on the field axis only. Within-stroke
-   interpolation stays linear via linear-fade.
+   interpolation stays linear via lch-fade.
 
    Defaults:
      - Missing `-final` defaults to its `-initial` counterpart.
@@ -18,9 +24,9 @@
   (:require [clojure.spec.alpha :as s]
             [bvm.specs :as bspec]
             [bvm.utils.interpolation :refer [lerp]]
-            [bvm.utils.color :refer [lerp-rgb]]
+            [bvm.utils.color :refer [lerp-lch]]
             [bvm.layouts.wavy-band :refer [wavy-band]]
-            [bvm.styles.linear-fade :refer [linear-fade]]
+            [bvm.styles.lch-fade :refer [lch-fade]]
             [bvm.drawing.rectangle :refer [rectangle]]))
 
 ;; -----------------------------------------------------------------------------
@@ -31,6 +37,13 @@
 
 (s/def ::unit-float (s/and number? #(<= 0 % 1)))
 (s/def ::non-neg-number (s/and number? #(<= 0 %)))
+
+;; LCH colour: [L C H]. Kept loose — out-of-gamut values get silent-clamped
+;; downstream by `lch->rgb-bytes`.
+(s/def ::lch-color
+  (s/tuple number? number? number?))
+
+(s/def ::color-space #{:srgb :adobe-rgb})
 
 ;; Top-level / shape of the field
 (s/def ::num-bands pos-int?)
@@ -86,14 +99,15 @@
        (s/def ~ease ::ease-fn))))
 
 (def-style-progression stroke-width ::non-neg-number)
-(def-style-progression stroke-color ::bspec/rgb-color)
+(def-style-progression stroke-color ::lch-color)
 (def-style-progression stroke-opacity (s/int-in 0 256))
-(def-style-progression fill-color ::bspec/rgb-color)
+(def-style-progression fill-color ::lch-color)
 (def-style-progression fill-opacity (s/int-in 0 256))
 
 (s/def ::config
   (s/keys :req-un [::num-bands ::particles-per-band-initial ::blend-mode]
           :opt-un [::particles-per-band-final ::particles-per-band-ease
+                   ::color-space
                    ::seed-base-layout ::seed-step-layout
                    ::seed-base-drawing ::seed-step-drawing
                    ::phase ::direction
@@ -144,7 +158,7 @@
 (defn- resolve-style-corners
   "For a 4-corner style param, returns [initial-for-this-band final-for-this-band]
    after collapsing the field axis at depth t. Within-stroke (start->end) is
-   preserved for linear-fade to handle linearly."
+   preserved for the style fn to handle."
   [config base t lerp-fn]
   (let [is (get config (keyword (str base "-initial-start")))
         ie (get config (keyword (str base "-initial-end")) is)
@@ -154,8 +168,6 @@
         et (ease t)]
     [(lerp-fn is fs et)
      (lerp-fn ie fe et)]))
-
-(defn- rgb-int [c] (mapv int c))
 
 ;; -----------------------------------------------------------------------------
 ;; The field
@@ -167,6 +179,7 @@
   [config]
   (let [num-bands (:num-bands config)
         blend-mode (:blend-mode config)
+        color-space (get config :color-space :srgb)
         phase (get config :phase false)
         direction (get config :direction :horizontal)
         seed-base-layout (get config :seed-base-layout 0)
@@ -188,11 +201,11 @@
              layout-var (lerp-field config :layout-variance depth)
              size-var (lerp-field config :size-variance depth)
              particles (int (lerp-field config :particles-per-band depth))
-             ;; Style 4-corners -> per-band initial/final for linear-fade
+             ;; Style 4-corners -> per-band initial/final for lch-fade
              [sw-i sw-f] (resolve-style-corners config "stroke-width" depth lerp)
-             [sc-i sc-f] (resolve-style-corners config "stroke-color" depth lerp-rgb)
+             [sc-i sc-f] (resolve-style-corners config "stroke-color" depth lerp-lch)
              [so-i so-f] (resolve-style-corners config "stroke-opacity" depth lerp)
-             [fc-i fc-f] (resolve-style-corners config "fill-color" depth lerp-rgb)
+             [fc-i fc-f] (resolve-style-corners config "fill-color" depth lerp-lch)
              [fo-i fo-f] (resolve-style-corners config "fill-opacity" depth lerp)]
          {:num-steps particles
           :layout-fn wavy-band
@@ -208,13 +221,14 @@
                            :phase phase
                            :direction direction
                            :seed (+ seed-base-layout (* i seed-step-layout))}
-          :style-fn linear-fade
-          :style-options {:initial-fill-color (rgb-int fc-i)
-                          :final-fill-color (rgb-int fc-f)
+          :style-fn lch-fade
+          :style-options {:color-space color-space
+                          :initial-fill-color fc-i
+                          :final-fill-color fc-f
                           :initial-fill-opacity (int fo-i)
                           :final-fill-opacity (int fo-f)
-                          :initial-stroke-color (rgb-int sc-i)
-                          :final-stroke-color (rgb-int sc-f)
+                          :initial-stroke-color sc-i
+                          :final-stroke-color sc-f
                           :initial-stroke-width (int sw-i)
                           :final-stroke-width (int sw-f)
                           :initial-stroke-opacity (int so-i)
