@@ -1,4 +1,5 @@
-(ns bvm.layouts.ring)
+(ns bvm.layouts.ring
+  (:import [java.util Random]))
 
 (defn ring
   "Arranges objects along an ellipse.
@@ -14,7 +15,10 @@
                       1 = full ellipse, 0.5 = half ellipse.
     :center-x       - Optional. X center of ellipse (0-1). Default: 0.5.
     :center-y       - Optional. Y center of ellipse (0-1). Default: 0.5.
-    :align-to-path  - Optional. Rotate objects to follow ellipse. Default: false."
+    :align-to-path  - Optional. Rotate objects to follow ellipse. Default: false.
+    :variance       - Optional. Random radial offset (0-1), scaled by the
+                      larger of the two semi-axes. Default: 0.0.
+    :seed           - Optional. Random seed for reproducibility. Default: 42."
   [index num-steps options]
   (let [;; Required options
         ellipse-width (:ellipse-width options)
@@ -27,6 +31,9 @@
         center-x (get options :center-x 0.5)
         center-y (get options :center-y 0.5)
         align-to-path (get options :align-to-path false)
+        variance (get options :variance 0.0)
+        seed (get options :seed 42)
+        rng (Random. (+ seed index))
         ;; Calculate progress along the arc (0 to 1)
         progress (if (<= num-steps 1)
                    0.0
@@ -39,14 +46,20 @@
         ;; Calculate position on ellipse
         rx (/ ellipse-width 2.0)
         ry (/ ellipse-height 2.0)
-        x (+ center-x (* rx (Math/cos angle)))
-        y (+ center-y (* ry (Math/sin angle)))
+        ;; Radial variance: random offset in [-variance*r, +variance*r]
+        ;; where r is the larger semi-axis (keeps jitter feeling proportional).
+        r-max (max rx ry)
+        radial-offset (* variance r-max (- (* 2.0 (.nextDouble rng)) 1.0))
+        cos-a (Math/cos angle)
+        sin-a (Math/sin angle)
+        x (+ center-x (* (+ rx radial-offset) cos-a))
+        y (+ center-y (* (+ ry radial-offset) sin-a))
         ;; Calculate rotation if aligning to path
         ;; Tangent angle for ellipse at angle θ: atan2(rx * cos(θ), -ry * sin(θ))
         rotation (if align-to-path
                    (Math/toDegrees
-                    (Math/atan2 (* rx (Math/cos angle))
-                                (- (* ry (Math/sin angle)))))
+                    (Math/atan2 (* rx cos-a)
+                                (- (* ry sin-a))))
                    0.0)]
     {:index index
      :x (float (max 0.0 (min 1.0 x)))
