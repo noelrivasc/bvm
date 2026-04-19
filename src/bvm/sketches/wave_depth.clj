@@ -1,16 +1,11 @@
 (ns bvm.sketches.wave-depth
   (:require
    [bvm.core :as bvm]
+   [bvm.utils.color :refer [lerp-rgb]]
+   [bvm.utils.interpolation :refer [lerp]]
    [bvm.layouts.wavy-band :refer [wavy-band]]
    [bvm.styles.linear-fade :refer [linear-fade]]
    [bvm.drawing.rectangle :refer [rectangle]]))
-
-(defn- lerp [a b t] (+ a (* (- b a) t)))
-
-(defn- lerp-color [[r1 g1 b1] [r2 g2 b2] t]
-  [(int (lerp r1 r2 t))
-   (int (lerp g1 g2 t))
-   (int (lerp b1 b2 t))])
 
 (def artworks
   {:cascade {:background-color [255 255 255]
@@ -34,6 +29,8 @@
              :size-var-end 0.12
              :obj-size-start 0.001
              :obj-size-end 0.12
+             ; NOTE that "top" means when the waves start, not
+             ; necessarily the top of the drawing.
              :top-initial-color [158 162 160]
              :top-final-color [155 160 172]
              :bottom-initial-color [175 197 192]
@@ -52,8 +49,8 @@
 
 (def current-artwork (:cascade artworks))
 
-(defn- make-band
-  "Creates a band config for a given depth (0 = top, 1 = bottom)."
+(defn make-band
+  "Creates a band config for a given depth (0 = start, 1 = end)."
   [artwork depth index]
   (let [position (lerp (:position-start artwork) (:position-end artwork) depth)
         amplitude (lerp (:amplitude-start artwork) (:amplitude-end artwork) depth)
@@ -64,8 +61,8 @@
         top-final (:top-final-color artwork)
         bottom-initial (:bottom-initial-color artwork)
         bottom-final (:bottom-final-color artwork)
-        initial-color (lerp-color top-initial bottom-initial depth)
-        final-color (lerp-color top-final bottom-final depth)
+        initial-color (lerp-rgb top-initial bottom-initial depth)
+        final-color (lerp-rgb top-final bottom-final depth)
         stroke-initial (mapv #(- % (:stroke-color-offset artwork)) initial-color)
         stroke-final (mapv #(- % (:stroke-color-offset artwork)) final-color)
         fill-opacity (int (lerp (:fill-opacity-start artwork) (:fill-opacity-end artwork) depth))
@@ -77,6 +74,7 @@
      :layout-options {:amplitude amplitude
                       :frequency (:frequency artwork)
                       :length (:length artwork)
+                      :offset (:offset artwork 0)
                       :position position
                       :object-width obj-size
                       :object-height obj-size
