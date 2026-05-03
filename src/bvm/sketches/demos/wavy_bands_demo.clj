@@ -1,4 +1,4 @@
-(ns bvm.sketches.wavy-bands-demo
+(ns bvm.sketches.demos.wavy-bands-demo
   (:require
    [bvm.core :as bvm]
    [bvm.layouts.wavy-band :refer [wavy-band]]

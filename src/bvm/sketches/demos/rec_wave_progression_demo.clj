@@ -1,4 +1,4 @@
-(ns bvm.sketches.rec-wave-progression-demo
+(ns bvm.sketches.demos.rec-wave-progression-demo
   "Throwaway sketch exercising every progression + the easing hook of
    bvm.fields.rec-wave-progression.
 

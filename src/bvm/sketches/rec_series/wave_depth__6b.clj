@@ -1,12 +1,8 @@
-(ns bvm.sketches.wave-depth--6b
+(ns bvm.sketches.rec-series.wave-depth--6b
   (:require
    [bvm.core :as bvm]
    [bvm.utils.color :as color]
-   [bvm.sketches.wave-depth :refer [make-band]]
-   [bvm.utils.interpolation :refer [lerp]]
-   [bvm.layouts.wavy-band :refer [wavy-band]]
-   [bvm.styles.linear-fade :refer [linear-fade]]
-   [bvm.drawing.rectangle :refer [rectangle]]))
+   [bvm.sketches.wave-depth :refer [make-band]]))
 
 (def palette
   {:gold [70 88.93 88.41]

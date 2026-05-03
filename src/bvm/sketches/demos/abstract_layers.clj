@@ -1,4 +1,4 @@
-(ns bvm.sketches.abstract-layers
+(ns bvm.sketches.demos.abstract-layers
   (:require
    [bvm.core :as bvm]
    [bvm.layouts.simple-grid :refer [simple-grid]]
@@ -9,6 +9,9 @@
 
 ;; Muted Japanese painting palette
 ;; Warm grays, soft blues, dusty pinks, aged creams
+
+;; Demo produced by Claude code from instructions.
+;; Written while testing the multi-layer capabilities.
 
 ;; Layer 1: Large background grid of pale rectangles
 (def layer-1

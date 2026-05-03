@@ -1,4 +1,4 @@
-(ns bvm.sketches.minimal
+(ns bvm.sketches.demos.minimal
   (:require
    [bvm.core :as bvm]
    [bvm.layouts.static-test :refer [static-test] :rename {static-test static-layout}]

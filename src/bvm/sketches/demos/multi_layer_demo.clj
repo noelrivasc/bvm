@@ -1,4 +1,4 @@
-(ns bvm.sketches.multi-layer-demo
+(ns bvm.sketches.demos.multi-layer-demo
   (:require
    [bvm.core :as bvm]
    [bvm.layouts.simple-grid :refer [simple-grid]]

@@ -1,4 +1,4 @@
-(ns bvm.sketches.ring-demo
+(ns bvm.sketches.demos.ring-demo
   (:require
    [bvm.core :as bvm]
    [bvm.layouts.ring :refer [ring]]

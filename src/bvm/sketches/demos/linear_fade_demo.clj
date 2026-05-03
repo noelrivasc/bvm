@@ -1,4 +1,4 @@
-(ns bvm.sketches.linear-fade-demo
+(ns bvm.sketches.demos.linear-fade-demo
   (:require
    [bvm.core :as bvm]
    [bvm.layouts.chaotic-spiral :refer [chaotic-spiral]]

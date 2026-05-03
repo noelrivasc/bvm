@@ -1,4 +1,4 @@
-(ns bvm.sketches.wave-depth
+(ns bvm.sketches.rec-series.wave-depth
   (:require
    [bvm.core :as bvm]
    [bvm.utils.color :refer [lerp-rgb]]
@@ -6,6 +6,9 @@
    [bvm.layouts.wavy-band :refer [wavy-band]]
    [bvm.styles.linear-fade :refer [linear-fade]]
    [bvm.drawing.rectangle :refer [rectangle]]))
+
+;; El primer sketch que me hizo pensar que esto tenía
+;; más posibilidades que hacer dibujos de kinder...
 
 (def artworks
   {:cascade {:background-color [255 255 255]

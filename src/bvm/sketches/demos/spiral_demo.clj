@@ -1,4 +1,4 @@
-(ns bvm.sketches.spiral-demo
+(ns bvm.sketches.demos.spiral-demo
   (:require
    [bvm.core :as bvm]
    [bvm.layouts.chaotic-spiral :refer [chaotic-spiral]]
