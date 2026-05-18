@@ -2,6 +2,9 @@
 
 A collection of generative art sketches, written in Quil and inspired by the work of Vera Molnár.
 
+<img width="1024" height="683" alt="6b-calming AdobeRGB-scaled" src="https://github.com/user-attachments/assets/7fd20fea-a505-4894-8006-114d25762d86" />
+
+
 ## License
 
 Copyright © 2025 Noel Rivas
