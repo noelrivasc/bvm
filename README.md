@@ -1,6 +1,6 @@
 # Bonjour Vera Molnár !
 
-A collection of generative art sketches, written in Quil and inspired by the work of Vera Molnár.
+A functional tool for generative art, built in Clojure and Quil. Sketches are defined as pure data — spec-validated maps describing *where* things go (layout), *how* they look (style), and *what* to draw. These primitives compose into layered visual structures (Particles, Strokes, and Fields) and combine through ordinary Clojure functions, threading, and higher-order transformations. Imperative rendering happens only at the final stage, as a projection of the resolved data onto the canvas. Inspired by the algorithmic rigor of Vera Molnár.
 
 ## License
 
