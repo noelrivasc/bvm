@@ -2,6 +2,9 @@
 
 A functional tool for generative art, built in Clojure and Quil. Sketches are defined as pure data — spec-validated maps describing *where* things go (layout), *how* they look (style), and *what* to draw. These primitives compose into layered visual structures (Particles, Strokes, and Fields) and combine through ordinary Clojure functions, threading, and higher-order transformations. Imperative rendering happens only at the final stage, as a projection of the resolved data onto the canvas. Inspired by the algorithmic rigor of Vera Molnár.
 
+<img width="1024" height="683" alt="6b-calming AdobeRGB-scaled" src="https://github.com/user-attachments/assets/7fd20fea-a505-4894-8006-114d25762d86" />
+
+
 ## License
 
 Copyright © 2025 Noel Rivas
