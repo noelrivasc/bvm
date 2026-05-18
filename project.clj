@@ -8,7 +8,9 @@
                  [nrepl "1.3.1"]
                  [com.bhauman/rebel-readline "0.1.5"]
                  [com.bhauman/rebel-readline-nrepl "0.1.5"]
-                 [org.clojure/test.check "1.1.1"]]
+                 [org.clojure/test.check "1.1.1"]
+                 ;; CLI options helper
+                 [org.clojure/tools.cli "1.4.256"]]
 
   :plugins [[cider/cider-nrepl "0.52.1"]]
   :repl-options {:repl-middleware ["cider.nrepl/cider-middleware"]})

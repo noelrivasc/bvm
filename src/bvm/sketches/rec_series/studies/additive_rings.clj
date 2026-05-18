@@ -1,4 +1,4 @@
-(ns bvm.sketches.rec-series.additive-rings
+(ns bvm.sketches.rec-series.studies.additive-rings
   (:require
    [bvm.core :as bvm]
    [bvm.utils.color :as color]
